@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -7,10 +7,10 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableOpacityProps,
   View,
 } from 'react-native';
-import {useFetch} from './useFetch';
+import {useFetch} from '../../useFetch';
+import { useNavigation } from '@react-navigation/native';
 
 type FilterTypes = 'all' | 'defense' | 'attack' | '';
 
@@ -25,7 +25,7 @@ type Equipment = {
   affected_attribute: 'atk' | 'def';
 };
 
-function App(): JSX.Element {
+function Equipments(): JSX.Element {
   const [filter, setFilter] = useState<FilterTypes>('all');
   const {data: equipments, loading, error} = useFetch<Equipment[]>(URL);
 
@@ -58,7 +58,7 @@ function App(): JSX.Element {
         </View>
 
         {loading && <ActivityIndicator />}
-        {!loading && filter !== '' && <Equipments equipments={equipments} />}
+        {!loading && filter !== '' && <EquipmentList equipments={equipments} />}
         {error && <Text style={styles.label}>{JSON.stringify(error)}</Text>}
       </View>
     </SafeAreaView>
@@ -69,7 +69,7 @@ type EquipmentsProps = {
   equipments: Equipment[];
 };
 
-const Equipments = ({equipments}: EquipmentsProps) => {
+const EquipmentList = ({equipments}: EquipmentsProps) => {
   return (
     <View style={styles.content}>
       <FlatList
@@ -119,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Equipments;
