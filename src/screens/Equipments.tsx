@@ -9,13 +9,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useFetch} from '../../useFetch';
-import { useNavigation } from '@react-navigation/native';
+import {storeOLD} from '../redux/storeOLD';
+import {getEquipments} from '../redux/actions/player.actions';
+import {connect} from 'react-redux';
 
 type FilterTypes = 'all' | 'defense' | 'attack' | '';
-
-const URL =
-  'https://dws-bug-hunters-k58ck9b2z-thalesgelinger.vercel.app/api/equipment';
 
 type Equipment = {
   id: string;
@@ -27,11 +25,17 @@ type Equipment = {
 
 function Equipments(): JSX.Element {
   const [filter, setFilter] = useState<FilterTypes>('all');
-  const {data: equipments, loading, error} = useFetch<Equipment[]>(URL);
+  const {app, player} = storeOLD.getState();
+  const {equipments} = player;
+  const {loading, error} = app;
 
   const updateFilter = (newFilter: FilterTypes) => () => {
     setFilter(newFilter);
   };
+
+  useEffect(() => {
+    storeOLD.dispatch(getEquipments());
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -59,7 +63,7 @@ function Equipments(): JSX.Element {
 
         {loading && <ActivityIndicator />}
         {!loading && filter !== '' && <EquipmentList equipments={equipments} />}
-        {error && <Text style={styles.label}>{JSON.stringify(error)}</Text>}
+        {error && <Text style={styles.label}>{error}</Text>}
       </View>
     </SafeAreaView>
   );
@@ -119,4 +123,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Equipments;
+const mapStateToProps = (state) => ({
+  player: state.player,
+  app: state.app,
+});
+
+export default connect(mapStateToProps, {getEquipments})(Equipments);

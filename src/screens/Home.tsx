@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
 import {
   SafeAreaView,
   StatusBar,
@@ -8,19 +9,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useUserContext} from '../contexts/UserContext';
+import {storeOLD} from '../redux/storeOLD';
+import {incrementLevel} from '../redux/actions/player.actions';
+import {getPlayerLevel} from '../redux/selectors';
 
 function Home(): JSX.Element {
   const navigation = useNavigation();
   const navigateToEquipments = () => {
     navigation.navigate('Equipments');
   };
-  const {user, setUser} = useUserContext();
-  const [count, setCount] = useState(0);
+  const level = getPlayerLevel();
 
   const updateUser = () => {
-    setUser(`John Doe ${count}`);
-    setCount(count + 1);
+    storeOLD.dispatch(incrementLevel(1));
   };
 
   return (
@@ -28,10 +29,10 @@ function Home(): JSX.Element {
       <StatusBar barStyle={'light-content'} />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>Home</Text>
-        <Text style={styles.label}>{`user: ${user}`}</Text>
+        <Text style={styles.label}>{`Player level: ${level}`}</Text>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.button} onPress={updateUser}>
-            <Text style={styles.label}>Update User</Text>
+            <Text style={styles.label}>Level up</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buttonsContainer}>
@@ -80,4 +81,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+const mapStateToProps = (state) => ({
+  player: state.player,
+});
+
+export default connect(mapStateToProps)(Home);

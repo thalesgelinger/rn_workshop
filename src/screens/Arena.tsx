@@ -1,5 +1,7 @@
 import React from 'react';
 import {SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {getPlayerLevel} from '../redux/selectors';
+import {connect} from 'react-redux';
 
 function Arena(): JSX.Element {
   return (
@@ -7,6 +9,7 @@ function Arena(): JSX.Element {
       <StatusBar barStyle={'light-content'} />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>Arena</Text>
+        <Text style={styles.label}>Player Level {getPlayerLevel()}</Text>
       </View>
     </SafeAreaView>
   );
@@ -25,6 +28,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 32,
   },
+  label: {
+    color: 'white',
+    fontSize: 16,
+  },
 });
 
-export default Arena;
+const mapStateToProps = (state) => ({
+  player: state.player,
+});
+
+export default connect(mapStateToProps)(Arena);

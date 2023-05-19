@@ -1,12 +1,13 @@
 import React from 'react';
 
 import Router from './routes/Router';
-import {Context} from './contexts';
+import {Provider} from 'react-redux';
+import {storeOLD} from './redux/storeOLD';
 
 export default function App() {
   return (
-    <Context>
+    <Provider store={storeOLD}>
       <Router />
-    </Context>
+    </Provider>
   );
 }
