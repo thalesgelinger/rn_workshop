@@ -1,13 +1,18 @@
-import {storeOLD} from '../storeOLD';
+import {useSelector} from 'react-redux';
+import {RootState} from '../storeOLD';
 
-export const getPlayer = () => {
-  return storeOLD.getState().player;
+export const usePlayer = () => {
+  return useSelector((state: RootState) => state.player);
 };
 
-export const getPlayerEquipments = () => {
-  return getPlayer().equipments;
+export const usePlayerEquipments = () => {
+  return usePlayer().equipments;
 };
 
-export const getPlayerLevel = () => {
-  return getPlayer().level;
+export const usePlayerLevel = () => {
+  return usePlayer().level;
+};
+
+export const useApp = () => {
+  return useSelector((state: RootState) => state.app);
 };

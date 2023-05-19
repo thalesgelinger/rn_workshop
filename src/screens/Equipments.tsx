@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {storeOLD} from '../redux/storeOLD';
 import {getEquipments} from '../redux/actions/player.actions';
-import {connect} from 'react-redux';
+import {useApp, usePlayerEquipments} from '../redux/selectors';
 
 type FilterTypes = 'all' | 'defense' | 'attack' | '';
 
@@ -25,9 +25,8 @@ type Equipment = {
 
 function Equipments(): JSX.Element {
   const [filter, setFilter] = useState<FilterTypes>('all');
-  const {app, player} = storeOLD.getState();
-  const {equipments} = player;
-  const {loading, error} = app;
+  const equipments = usePlayerEquipments();
+  const {loading, error} = useApp();
 
   const updateFilter = (newFilter: FilterTypes) => () => {
     setFilter(newFilter);
@@ -123,9 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
-  player: state.player,
-  app: state.app,
-});
-
-export default connect(mapStateToProps, {getEquipments})(Equipments);
+export default Equipments;
