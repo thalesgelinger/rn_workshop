@@ -1,6 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {connect} from 'react-redux';
+import React from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -9,19 +8,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {storeOLD} from '../redux/storeOLD';
-import {incrementLevel} from '../redux/actions/player.actions';
-import {getPlayerLevel} from '../redux/selectors';
+import {store} from '../redux/store';
+import {levelIncrement} from '../redux/slices/player.slice';
+import {usePlayerLevel} from '../redux/selectors';
 
 function Home(): JSX.Element {
   const navigation = useNavigation();
   const navigateToEquipments = () => {
     navigation.navigate('Equipments');
   };
-  const level = getPlayerLevel();
+  const level = usePlayerLevel();
 
   const updateUser = () => {
-    storeOLD.dispatch(incrementLevel(1));
+    store.dispatch(levelIncrement(1));
   };
 
   return (
@@ -81,8 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
-  player: state.player,
-});
-
-export default connect(mapStateToProps)(Home);
+export default Home;
